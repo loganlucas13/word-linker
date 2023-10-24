@@ -15,17 +15,6 @@ typedef struct LadderNode_struct {
 } LadderNode;
 
 int countWordsOfLength(char* filename, int wordSize) {
-    //---------------------------------------------------------
-    // TODO - write countWordsOfLength()
-    //      open a file with name <filename> and count the
-    //      number of words in the file that are exactly
-    //      <wordSize> letters long, where a "word" is ANY set
-    //      of characters that falls between two whitespaces
-    //      (or tabs, or newlines, etc.).
-    //          return the count, if filename is valid
-    //          return -1 if the file cannot be opened
-    //---------------------------------------------------------
-
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         return -1;
@@ -34,6 +23,7 @@ int countWordsOfLength(char* filename, int wordSize) {
     int count = 0;
     char line[100];
     while (fgets(line, 100, file)) {
+        strtok(line, "\n"); // removes newline character
         if (strlen(line) == wordSize) {
             count++;
         }
@@ -44,23 +34,27 @@ int countWordsOfLength(char* filename, int wordSize) {
 }
 
 bool buildWordArray(char* filename, char** words, int numWords, int wordSize) {
-    //---------------------------------------------------------
-    // TODO - write buildWordArray()
-    //      open a file with name <filename> and fill the
-    //      pre-allocated word array <words> with only words
-    //      that are exactly <wordSize> letters long;
-    //      the file should contain exactly <numWords> words
-    //      that are the correct number of letters; thus,
-    //      <words> is pre-allocated as <numWords> char* ptrs,
-    //      each pointing to a C-string of legnth <wordSize>+1;
-    //          return true iff the file is opened successfully
-    //                      AND the file contains exactly
-    //                      <numWords> words of exactly
-    //                      <wordSize> letters, and those words
-    //                      are stored in the <words> array
-    //          return false otherwise
-    //---------------------------------------------------------
-    return false;
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        return false;
+    }
+
+    int count = 0;
+    char line[100];
+    while (fgets(line, 100, file)) {
+        strtok(line, "\n"); // removes newline character
+        if (strlen(line) == wordSize) {
+            line[wordSize] = '\0'; // adds null character to end
+            strcpy(words[count], line);
+            count++;
+        }
+    }
+    fclose(file);
+
+    if (count != numWords) {
+        return false;
+    }
+    return true;
 }
 
 int findWord(char** words, char* aWord, int loInd, int hiInd) {

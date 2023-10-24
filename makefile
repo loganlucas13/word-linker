@@ -1,0 +1,13 @@
+build:
+	rm -f out.exe
+	gcc main.c -o out.exe
+
+run:
+	./out.exe
+
+build_test:
+	rm -f test.exe
+	gcc test.c -o test.exe
+
+run_test:
+	./test.exe
