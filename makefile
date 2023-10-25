@@ -11,3 +11,9 @@ build_test:
 
 run_test:
 	./test.exe
+
+mac:
+	export MallocStackLogging=1
+
+leaks:
+	leaks --atExit -- ./out.exe

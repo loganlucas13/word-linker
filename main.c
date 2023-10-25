@@ -245,6 +245,7 @@ WordNode* findShortestWordLadder(   char** words,
                     if (strcmp(words[i], finalWord) == 0) {
                         insertWordAtFront(&myLadder, finalWord);
                         freeLadderList(myList);
+                        freeWords(words, numWords);
                         return myLadder;
                     }
                     else {
@@ -258,6 +259,7 @@ WordNode* findShortestWordLadder(   char** words,
     }
     freeLadder(myLadder);
     freeLadderList(myList);
+    freeWords(words, numWords);
     return NULL;
 }
 
