@@ -147,7 +147,7 @@ WordNode* copyLadder(WordNode* ladder) {
 // @return: none
 void freeLadder(WordNode* ladder) {
     WordNode* curr = ladder;
-    while (curr) {
+    while (curr != NULL) {
         WordNode* temp = curr->next;
         free(curr);
         curr = temp;
@@ -200,7 +200,7 @@ WordNode* popLadderFromFront(LadderNode** list) {
 // @return: none
 void freeLadderList(LadderNode* myList) {
     LadderNode* curr = myList;
-    while(curr) {
+    while (curr != NULL) {
         LadderNode* temp = curr->next;
         freeLadder(curr->topWord);
         free(curr);
@@ -245,7 +245,6 @@ WordNode* findShortestWordLadder(   char** words,
                     if (strcmp(words[i], finalWord) == 0) {
                         insertWordAtFront(&myLadder, finalWord);
                         freeLadderList(myList);
-                        freeWords(words, numWords);
                         return myLadder;
                     }
                     else {
@@ -259,7 +258,6 @@ WordNode* findShortestWordLadder(   char** words,
     }
     freeLadder(myLadder);
     freeLadderList(myList);
-    freeWords(words, numWords);
     return NULL;
 }
 

@@ -17,3 +17,6 @@ mac:
 
 leaks:
 	leaks --atExit -- ./out.exe
+
+valgrind:
+	valgrind -s --tool=memcheck --leak-check=yes --track-origins=yes ./out.exe
