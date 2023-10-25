@@ -36,7 +36,7 @@ int countWordsOfLength(char* filename, int wordSize) {
 void testCountWordsOfLength() {
     printf("  Testing countWordsOfLength()\n");
     char filename[] = "simple3.txt";
-    
+
     int result = countWordsOfLength(filename, 3);
     printf("   Expected result: 26\n");
     printf("   Actual result: %d\n", result);
@@ -92,7 +92,7 @@ void testBuildWordArray() {
     }
 
     passed = buildWordArray(filename, words, numWords, wordSize);
-    
+
     for (int i = 0; i < numWords; i++) {
         printf("   %d: %s\n", i, words[i]);
     }
@@ -106,7 +106,7 @@ void testBuildWordArray() {
 int findWord(char** words, char* aWord, int loInd, int hiInd) {
     while (loInd <= hiInd) {
         int mid = (loInd + hiInd) / 2;
-        
+
         // aWord found at mid
         if (strcmp(aWord, words[mid]) == 0) {
             return mid;
@@ -174,16 +174,6 @@ void printLadder(WordNode* ladder) {
 }
 
 void insertWordAtFront(WordNode** ladder, char* newWord) {
-    //---------------------------------------------------------
-    // TODO - write insertWordAtFront()
-    //          allocate space for a new [WordNode], set its
-    //          [myWord] subitem using <newWord> and insert
-    //          it to the front of <ladder>, which is a
-    //          pointer-passed-by-pointer as the head node of
-    //          ladder changes inside this function;
-    //          <newWord> is a pointer to a C-string from the
-    //          full word array, already heap-allocated
-    //---------------------------------------------------------
     WordNode* newNode = (WordNode*)malloc(sizeof(WordNode));
     newNode->myWord = (char*)malloc(strlen(newWord)+1);
     strcpy(newNode->myWord, newWord);
@@ -191,7 +181,20 @@ void insertWordAtFront(WordNode** ladder, char* newWord) {
     (*ladder) = newNode;
 }
 
-void testInsertWordAtFront() {
+WordNode* copyLadder(WordNode* ladder) {
+    if (ladder == NULL)  { // base case
+        return NULL;
+    }
+
+    WordNode* newLadder = (WordNode*)malloc(sizeof(WordNode));
+    newLadder->myWord = ladder->myWord;
+
+    newLadder->next = copyLadder(ladder->next); // recursive step
+
+    return newLadder;
+}
+
+void testInsertAndCopy() {
     printf("  Testing insertWordAtFront()\n");
 
     char filename[] = "simple3.txt";
@@ -203,6 +206,7 @@ void testInsertWordAtFront() {
     for (int i = 0; i < numWords; i++) {
         words[i] = (char*)malloc(wordSize*sizeof(char));
     }
+    passed = buildWordArray(filename, words, numWords, wordSize);
 
     WordNode* ladder = (WordNode*)malloc(numWords*sizeof(WordNode));
     ladder = NULL;
@@ -211,7 +215,11 @@ void testInsertWordAtFront() {
     }
 
     printLadder(ladder);
-    
+
+    printf("  Testing copyLadder()\n");
+    WordNode* copy = copyLadder(ladder);
+
+    printLadder(copy);
 }
 
 int main() {
@@ -222,8 +230,8 @@ int main() {
     testBuildWordArray();
 
     testFindWord();
-    
-    testInsertWordAtFront();
+
+    testInsertAndCopy();
 
     return 0;
 }

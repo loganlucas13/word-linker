@@ -60,7 +60,7 @@ bool buildWordArray(char* filename, char** words, int numWords, int wordSize) {
 int findWord(char** words, char* aWord, int loInd, int hiInd) {
     while (loInd <= hiInd) {
         int mid = (loInd + hiInd) / 2;
-        
+
         // aWord found at mid
         if (strcmp(aWord, words[mid]) == 0) {
             return mid;
@@ -84,17 +84,8 @@ void freeWords(char** words, int numWords) {
 }
 
 void insertWordAtFront(WordNode** ladder, char* newWord) {
-    //---------------------------------------------------------
-    // TODO - write insertWordAtFront()
-    //          allocate space for a new [WordNode], set its
-    //          [myWord] subitem using <newWord> and insert
-    //          it to the front of <ladder>, which is a
-    //          pointer-passed-by-pointer as the head node of
-    //          ladder changes inside this function;
-    //          <newWord> is a pointer to a C-string from the
-    //          full word array, already heap-allocated
-    //---------------------------------------------------------
     WordNode* newNode = (WordNode*)malloc(sizeof(WordNode));
+    newNode->myWord = (char*)malloc(strlen(newWord)+1);
     strcpy(newNode->myWord, newWord);
     newNode->next = (*ladder);
     (*ladder) = newNode;
@@ -111,21 +102,12 @@ int getLadderHeight(WordNode* ladder) {
 }
 
 WordNode* copyLadder(WordNode* ladder) {
-    //---------------------------------------------------------
-    // TODO - write copyLadder()
-    //          make a complete copy of <ladder> and return it;
-    //          the copy ladder must have new space allocated
-    //          for each [WordNode] in <ladder>, BUT the
-    //          C-string pointers to elements of the full word
-    //          array can be reused; i.e. the actual words do
-    //          NOT need another allocation here
-    //---------------------------------------------------------
     if (ladder == NULL)  { // base case
         return NULL;
     }
 
     WordNode* newLadder = (WordNode*)malloc(sizeof(WordNode));
-    strcpy(newLadder->myWord, ladder->myWord);
+    newLadder->myWord = ladder->myWord;
 
     newLadder->next = copyLadder(ladder->next); // recursive step
 
@@ -159,7 +141,24 @@ void insertLadderAtBack(LadderNode** list, WordNode* newLadder) {
     //          must handle the edge case where <list> is empty
     //          and the new [LadderNode] becomes the head node
     //---------------------------------------------------------
-    
+    LadderNode* newNode = (LadderNode*)malloc(sizeof(LadderNode));
+    newNode->topWord = newLadder;
+    newNode->next = NULL;
+
+    if (*list == NULL) {
+        (*list) = newNode;
+        return;
+    }
+
+    LadderNode* curr = *list;
+    while (curr) {
+        if (curr->next == NULL) {
+            curr->next = newNode;
+            break;
+        }
+        curr = curr->next;
+    }
+
 }
 
 WordNode* popLadderFromFront(LadderNode** list) {
@@ -176,7 +175,17 @@ WordNode* popLadderFromFront(LadderNode** list) {
     //          will go out of scope, but the ladder itself,
     //          i.e. the head [WordNode], should NOT be freed.
     //---------------------------------------------------------
-    return NULL; //modify this
+    if (*list == NULL) {
+        return NULL;
+    }
+
+    WordNode* frontNode = (*list)->topWord;
+    LadderNode* newFront = (*list)->next;
+
+    free(*list);
+    *list = newFront;
+
+    return frontNode;
 }
 
 void freeLadderList(LadderNode* myList) {
@@ -189,6 +198,13 @@ void freeLadderList(LadderNode* myList) {
     //           - then, free the space allocated for the
     //                  [LadderNode] itself
     //---------------------------------------------------------
+    LadderNode* curr = myList;
+    while(curr) {
+        LadderNode* temp = curr->next;
+        freeLadder(curr->topWord);
+        free(curr);
+        curr = temp;
+    }
 }
 
 WordNode* findShortestWordLadder(   char** words,
