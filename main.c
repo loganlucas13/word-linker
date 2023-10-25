@@ -97,13 +97,10 @@ void insertWordAtFront(WordNode** ladder, char* newWord) {
     WordNode* newNode = (WordNode*)malloc(sizeof(WordNode));
     strcpy(newNode->myWord, newWord);
     newNode->next = (*ladder);
+    (*ladder) = newNode;
 }
 
 int getLadderHeight(WordNode* ladder) {
-    //---------------------------------------------------------
-    // TODO - write getLadderHeight()
-    //          find & return number of words in <ladder> list
-    //---------------------------------------------------------
     int count = 0;
     WordNode* curr = ladder;
     while (curr) {
@@ -123,7 +120,16 @@ WordNode* copyLadder(WordNode* ladder) {
     //          array can be reused; i.e. the actual words do
     //          NOT need another allocation here
     //---------------------------------------------------------
-    return NULL; //modify this
+    if (ladder == NULL)  { // base case
+        return NULL;
+    }
+
+    WordNode* newLadder = (WordNode*)malloc(sizeof(WordNode));
+    strcpy(newLadder->myWord, ladder->myWord);
+
+    newLadder->next = copyLadder(ladder->next); // recursive step
+
+    return newLadder;
 }
 
 void freeLadder(WordNode* ladder) {
@@ -153,6 +159,7 @@ void insertLadderAtBack(LadderNode** list, WordNode* newLadder) {
     //          must handle the edge case where <list> is empty
     //          and the new [LadderNode] becomes the head node
     //---------------------------------------------------------
+    
 }
 
 WordNode* popLadderFromFront(LadderNode** list) {
