@@ -175,8 +175,7 @@ void printLadder(WordNode* ladder) {
 
 void insertWordAtFront(WordNode** ladder, char* newWord) {
     WordNode* newNode = (WordNode*)malloc(sizeof(WordNode));
-    newNode->myWord = (char*)malloc(strlen(newWord)+1);
-    strcpy(newNode->myWord, newWord);
+    newNode->myWord = newWord;
     newNode->next = (*ladder);
     (*ladder) = newNode;
 }
