@@ -55,18 +55,14 @@ bool buildWordArray(char* filename, char** words, int numWords, int wordSize) {
     char line[100];
     while (fgets(line, 100, file)) {
         strtok(line, "\n"); // removes newline character
-        printf("length: %ld\n", strlen(line));
         if (strlen(line) == wordSize) {
             line[wordSize] = '\0'; // adds null character to end
             strcpy(words[count], line);
-            printf("%s\n", words[count]);
             count++;
         }
     }
     fclose(file);
 
-    printf("expected count: %d\n", numWords);
-    printf("actual count: %d\n", count);
     if (count != numWords) {
         return false;
     }
@@ -88,10 +84,77 @@ void testBuildWordArray() {
     passed = buildWordArray(filename, words, numWords, wordSize);
     
     for (int i = 0; i < numWords; i++) {
+        printf("   %d: %s\n", i, words[i]);
+    }
+
+    for (int i = 0; i < numWords; i++) {
         free(words[i]);
     }
     free(words);
 }
+
+int findWord(char** words, char* aWord, int loInd, int hiInd) {
+    while (loInd <= hiInd) {
+        int mid = (loInd + hiInd) / 2;
+        
+        // aWord found at mid
+        if (strcmp(aWord, words[mid]) == 0) {
+            return mid;
+        }
+
+        if (strcmp(aWord, words[mid]) > 0) {
+            loInd = mid+1; // ignore left half
+        }
+        else {
+            hiInd = mid-1; // ignore right half
+        }
+    }
+    return -1; // not found
+}
+
+void testFindWord() {
+    printf("  Testing findWord()\n");
+    char filename[] = "simple3.txt";
+    int numWords = 26;
+    int wordSize = 3;
+    bool passed;
+
+    char** words = (char**)malloc(numWords*sizeof(char*));
+    for (int i = 0; i < numWords; i++) {
+        words[i] = (char*)malloc(wordSize*sizeof(char));
+    }
+
+    passed = buildWordArray(filename, words, numWords, wordSize);
+    printf("   Searching for 'aim'\n");
+    printf("    expected result: 0\n");
+    printf("    actual result: %d\n", findWord(words, "aim", 0, numWords-1));
+
+    passed = buildWordArray(filename, words, numWords, wordSize);
+    printf("   Searching for 'tye'\n");
+    printf("    expected result: 25\n");
+    printf("    actual result: %d\n", findWord(words, "tye", 0, numWords-1));
+
+    passed = buildWordArray(filename, words, numWords, wordSize);
+    printf("   Searching for 'lip'\n");
+    printf("    expected result: 14\n");
+    printf("    actual result: %d\n", findWord(words, "lip", 0, numWords-1));
+
+    passed = buildWordArray(filename, words, numWords, wordSize);
+    printf("   Searching for 'log'\n");
+    printf("    expected result: 15\n");
+    printf("    actual result: %d\n", findWord(words, "log", 0, numWords-1));
+
+    passed = buildWordArray(filename, words, numWords, wordSize);
+    printf("   Searching for 'bum'\n");
+    printf("    expected result: 3\n");
+    printf("    actual result: %d\n", findWord(words, "bum", 0, numWords-1));
+
+    for (int i = 0; i < numWords; i++) {
+        free(words[i]);
+    }
+    free(words);
+}
+
 
 int main() {
     printf("Running Tests:\n");
@@ -100,6 +163,7 @@ int main() {
 
     testBuildWordArray();
 
-
+    testFindWord();
+    
     return 0;
 }

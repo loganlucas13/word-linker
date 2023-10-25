@@ -58,26 +58,29 @@ bool buildWordArray(char* filename, char** words, int numWords, int wordSize) {
 }
 
 int findWord(char** words, char* aWord, int loInd, int hiInd) {
-    //---------------------------------------------------------
-    // TODO - write findWord()
-    //          binary search for string <aWord> in an
-    //          alphabetically sorted array of strings <words>,
-    //          only between <loInd> & <hiInd>
-    //              return index of <aWord> if found
-    //              return -1 if not found b/w loInd & hiInd
-    //---------------------------------------------------------
-    return -1; // modify this line
+    while (loInd <= hiInd) {
+        int mid = (loInd + hiInd) / 2;
+        
+        // aWord found at mid
+        if (strcmp(aWord, words[mid]) == 0) {
+            return mid;
+        }
+
+        if (strcmp(aWord, words[mid]) > 0) {
+            loInd = mid+1; // ignore left half
+        }
+        else {
+            hiInd = mid-1; // ignore right half
+        }
+    }
+    return -1; // not found
 }
 
 void freeWords(char** words, int numWords) {
-    //---------------------------------------------------------
-    // TODO - write freeWords()
-    //          free up all heap-allocated space for <words>,
-    //          which is an array of <numWords> C-strings
-    //           - free the space allocated for each C-string
-    //           - then, free the space allocated for the array
-    //                  of pointers, <words>, itself
-    //---------------------------------------------------------
+    for (int i = 0; i < numWords; i++) {
+        free(words[i]);
+    }
+    free(words);
 }
 
 void insertWordAtFront(WordNode** ladder, char* newWord) {
@@ -91,6 +94,9 @@ void insertWordAtFront(WordNode** ladder, char* newWord) {
     //          <newWord> is a pointer to a C-string from the
     //          full word array, already heap-allocated
     //---------------------------------------------------------
+    WordNode* newNode = (WordNode*)malloc(sizeof(WordNode));
+    strcpy(newNode->myWord, newWord);
+    newNode->next = (*ladder);
 }
 
 int getLadderHeight(WordNode* ladder) {
@@ -98,7 +104,13 @@ int getLadderHeight(WordNode* ladder) {
     // TODO - write getLadderHeight()
     //          find & return number of words in <ladder> list
     //---------------------------------------------------------
-    return -1; // modify this line
+    int count = 0;
+    WordNode* curr = ladder;
+    while (curr) {
+        count++;
+        curr = curr->next;
+    }
+    return count;
 }
 
 WordNode* copyLadder(WordNode* ladder) {
@@ -122,6 +134,12 @@ void freeLadder(WordNode* ladder) {
     //          instead just free up the space that was
     //          allocated for each [WordNode]
     //---------------------------------------------------------
+    WordNode* curr = ladder;
+    while (curr) {
+        WordNode* temp = curr->next;
+        free(curr);
+        curr = temp;
+    }
 }
 
 void insertLadderAtBack(LadderNode** list, WordNode* newLadder) {
