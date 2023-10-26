@@ -146,11 +146,10 @@ WordNode* copyLadder(WordNode* ladder) {
 // @param: word ladder (linked list)
 // @return: none
 void freeLadder(WordNode* ladder) {
-    WordNode* curr = ladder;
-    while (curr != NULL) {
-        WordNode* temp = curr->next;
-        free(curr);
-        curr = temp;
+    while (ladder != NULL) {
+        WordNode* temp = ladder;
+        ladder = ladder->next;
+        free(temp);
     }
 }
 
