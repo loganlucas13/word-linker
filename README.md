@@ -9,4 +9,4 @@
 1. Clone this repo using `git clone https://github.com/loganlucas13/word-ladder-finder.git` in the terminal
 2. Inside the root directory of this project, use the commands `make build` and `make run`
 
-NOTE: There are other available rules inside of the [makefile](makefile)
+*NOTE: There are other available rules inside of the [makefile](makefile)*
