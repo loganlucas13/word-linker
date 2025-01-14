@@ -1,4 +1,4 @@
-<h1 align="center">Word Ladder Finder</h1>
+<h1 align="center">Word Linker</h1>
 
 ## About this project!
 * Built entirely in C!
